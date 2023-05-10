@@ -3,9 +3,13 @@
 Generate a permalink for the line or lines you are on and copy it, open it, or
 both!
 
+## Requirements
+
+- Neovim v0.9.0 (it may work in earlier versions, untested though)
+
 ## Setup
 
-Install this plugin. I use nix so I am unhelpful with other plugin managers.
+Install this plugin. I use Nix so I am unhelpful with other plugin managers.
 
 Then you need to call it somehow while in normal or visual mode. The following
 is an example keybinding I use:
@@ -27,7 +31,7 @@ vim.api.nvim_set_keymap('v', '<Leader>glo', '', {
 })
 ```
 
-## Exposed Function
+## Exposed Functions
 
 ### `require('git-permalink').create_link`
 
