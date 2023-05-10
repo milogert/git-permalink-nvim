@@ -7,24 +7,6 @@ local replace = function(str, what, with)
   return string.gsub(str, what, with)
 end
 
--- Create the link
---
--- @param mode either '.' or 'v'. Used by vim.fn.line
-M.create_link = function (mode)
-  local origin = vim.api.nvim_exec("G remote get-url --push origin", true)
-  local origin_url, _ = string.gsub(origin, "git@(.+):(.+)/(.+).git", "https://%1/%2/%3")
-
-  local sha = vim.api.nvim_exec("G rev-parse HEAD", true)
-  local repo = replace(vim.api.nvim_buf_get_name(0), vim.fn.getcwd(), "")
-  local line_number = vim.fn.line(mode)
-  local end_line_number = line_number
-  if mode == 'v' then
-    end_line_number = vim.fn.line('.')
-  end
-
-  return origin_url.."/blob/"..sha..repo.."#L"..line_number.."-L"..end_line_number
-end
-
 -- Send the link to your clipboard and print a message saying it was done.
 local send_to_clipboard = function (permalink)
   print("Copied permalink to github")
@@ -46,20 +28,41 @@ local open_link = function (permalink)
   end
 end
 
+-- Create the link
+--
+-- @param mode either '.' or 'v'. Used by vim.fn.line
+M.create_link = function (mode)
+  local origin = vim.api.nvim_exec("G remote get-url --push origin", true)
+  local origin_url, _ = string.gsub(origin, "git@(.+):(.+)/(.+).git", "https://%1/%2/%3")
+
+  local sha = vim.api.nvim_exec("G rev-parse HEAD", true)
+  local repo = replace(vim.api.nvim_buf_get_name(0), vim.fn.getcwd(), "")
+  local line_number = vim.fn.line(mode)
+  local end_line_number = line_number
+  if mode == 'v' then
+    end_line_number = vim.fn.line('.')
+  end
+
+  return origin_url.."/blob/"..sha..repo.."#L"..line_number.."-L"..end_line_number
+end
+
 M.create_copy = function (mode)
   local permalink = M.create_link(mode)
   send_to_clipboard(permalink)
-end
-
-M.create_open_copy = function (mode)
-  local permalink = M.create_link(mode)
-  send_to_clipboard(permalink)
-  open_link(permalink)
+  return permalink
 end
 
 M.create_open = function (mode)
   local permalink = M.create_link(mode)
   open_link(permalink)
+  return permalink
+end
+
+M.create_copy_open = function (mode)
+  local permalink = M.create_link(mode)
+  send_to_clipboard(permalink)
+  open_link(permalink)
+  return permalink
 end
 
 return M
