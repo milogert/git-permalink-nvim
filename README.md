@@ -12,13 +12,18 @@ is an example keybinding I use:
 
 ```lua
 -- Generates and copies the link in normal mode.
-vim.api.nvim_set_keymap('n', '<Leader>gl', '', {
+vim.api.nvim_set_keymap('n', '<Leader>glc', '', {
   callback = function () git_permalink.create_copy('.') end
 })
 
 -- Generates and copies the link in visual mode.
-vim.api.nvim_set_keymap('v', '<Leader>gl', '', {
+vim.api.nvim_set_keymap('v', '<Leader>glc', '', {
   callback = function () git_permalink.create_copy('v') end
+})
+
+-- Generates and copies the link in visual mode.
+vim.api.nvim_set_keymap('v', '<Leader>glo', '', {
+  callback = function () git_permalink.create_open('.') end
 })
 ```
 
